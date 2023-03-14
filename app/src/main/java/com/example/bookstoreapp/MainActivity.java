@@ -74,37 +74,36 @@ public class MainActivity extends AppCompatActivity {
         // Toast method to show the pop up notification for a brief moment
         Toast myMessage = Toast.makeText(this, "Book (" + Title + ")" + " and the price (" + new_price + ")" , Toast.LENGTH_SHORT );
         myMessage.show();
+
+        /**  store and retrieve data  */
+        SharedPreferences attributeID = getSharedPreferences("attributes", 0);
+
+        /**  it modify the data stored in the SharedPreferences  */
+        SharedPreferences.Editor attributesEditor = attributeID.edit();
+
+        /**  Storing the String value into desired SharedPreferences objects  */
+        attributesEditor.putString("BookID_key", Title);
+
+        /** it saves the changes that we modify to the SharedPreferences objects  */
+        attributesEditor.apply();
     }
 
 
     /**  PART 2  */
+    /**  Load function  */
     @Override
     protected void onStart() {
         super.onStart();
 
-        editText_BookID = findViewById(R.id.editTextBookID);
-        editText_Title = findViewById(R.id.editTextTitle);
-        editText_ISBN = findViewById(R.id.editTextISBN);
-        editText_Author = findViewById(R.id.editTextAuthor);
-        editText_Description = findViewById(R.id.editTextDescription);
-        editText_Price = findViewById(R.id.editTextPrice);                                          //Price
-
         /**  store and retrieve data after clicking exiting app and reentering again  */
-        SharedPreferences Data_BookID = getSharedPreferences("BookID", 0);
-        SharedPreferences Data_Title = getSharedPreferences("Title", 0);
-        SharedPreferences Data_ISBN = getSharedPreferences("ISBN", 0);
-        SharedPreferences Data_Author = getSharedPreferences("Author", 0);
-        SharedPreferences Data_Description = getSharedPreferences("Description", 0);
-        SharedPreferences Data_Price = getSharedPreferences("Price", 0);                //Price
+        SharedPreferences attributeID = getSharedPreferences("attributes", 0);
 
         /** retrieving the String value from the SharePreference objects using keys */
-        String msg_BookID = Data_BookID.getString("BookID_key"," " );
-        String msg_Title = Data_Title.getString("Title_key", " ");
-        String msg_ISBN = Data_ISBN.getString("ISBN_key", " ");
-        String msg_Author = Data_Author.getString("Author_key", " ");
-        String msg_Description = Data_Description.getString("Description_key", " ");
-        long myDoubleAsLong = Data_Price.getLong("myDouble", 0L);                              //Price
-        double myDouble = Double.longBitsToDouble(myDoubleAsLong);
+        String msg_BookID = attributeID.getString("BookID_key"," " );
+        String msg_Title = attributeID.getString("Title_key", " ");
+        String msg_ISBN = attributeID.getString("ISBN_key", " ");
+        String msg_Author = attributeID.getString("Author_key", " ");
+        String msg_Description = attributeID.getString("Description_key", " ");
 
         /**  Set the text accordingly  */
         editText_BookID.setText(msg_BookID);
@@ -112,21 +111,14 @@ public class MainActivity extends AppCompatActivity {
         editText_ISBN.setText(msg_ISBN);
         editText_Author.setText(msg_Author);
         editText_Description.setText(msg_Description);
-        editText_Price.setText(String.valueOf(myDouble));                                           //Price
+        editText_Price.setText(attributeID.getString("Price_key", " "));                      //price
     }
 
     @Override
     protected void onStop() {
         super.onStop();
 
-        editText_BookID = findViewById(R.id.editTextBookID);
-        editText_Title = findViewById(R.id.editTextTitle);
-        editText_ISBN = findViewById(R.id.editTextISBN);
-        editText_Author = findViewById(R.id.editTextAuthor);
-        editText_Description = findViewById(R.id.editTextDescription);
-        editText_Price = findViewById(R.id.editTextPrice);                                          //Price
-
-        /**  assigning values  */
+        /**  assigning values (Retrieve data from user)  */
         String saveBookID = editText_BookID.getText().toString();
         String saveTitle = editText_Title.getText().toString();
         String saveISBN = editText_ISBN.getText().toString();
@@ -134,56 +126,53 @@ public class MainActivity extends AppCompatActivity {
         String saveDescription = editText_Description.getText().toString();
 
         /**  store and retrieve data  */
-        SharedPreferences Data_BookID = getSharedPreferences("BookID", 0);
-        SharedPreferences Data_Title = getSharedPreferences("Title", 0);
-        SharedPreferences Data_ISBN = getSharedPreferences("ISBN", 0);
-        SharedPreferences Data_Author = getSharedPreferences("Author", 0);
-        SharedPreferences Data_Description = getSharedPreferences("Description", 0);
-        SharedPreferences Data_Price = getSharedPreferences("Price", 0);                //Price
+        SharedPreferences attributeID = getSharedPreferences("attributes", 0);
 
         /**  it modify the data stored in the SharedPreferences  */
-        SharedPreferences.Editor BookID_Editor = Data_BookID.edit();
-        SharedPreferences.Editor Title_Editor = Data_Title.edit();
-        SharedPreferences.Editor ISBN_Editor = Data_ISBN.edit();
-        SharedPreferences.Editor Author_Editor = Data_Author.edit();
-        SharedPreferences.Editor Description_Editor = Data_Description.edit();
-        SharedPreferences.Editor Price_Editor = Data_Price.edit();                                   //Price
+        SharedPreferences.Editor attributesEditor = attributeID.edit();
 
         /**  Storing the String value into desired SharedPreferences objects  */
-        BookID_Editor.putString("BookID_key", saveBookID);
-        Title_Editor.putString("Title_key", saveTitle);
-        ISBN_Editor.putString("ISBN_key", saveISBN);
-        Author_Editor.putString("Author_key", saveAuthor);
-        Description_Editor.putString("Description_key", saveDescription);
-        double myDouble = Double.valueOf(editText_Price.getText().toString());
-        long myDoubleAsLong = Double.doubleToRawLongBits(myDouble);                                   //Price
-        Price_Editor.putLong("myDouble", myDoubleAsLong);
-
+        attributesEditor.putString("BookID_key", saveBookID);
+        attributesEditor.putString("Title_key", saveTitle);
+        attributesEditor.putString("ISBN_key", saveISBN);
+        attributesEditor.putString("Author_key", saveAuthor);
+        attributesEditor.putString("Description_key", saveDescription);
+        attributesEditor.putString("Price_key", editText_Price.getText().toString());            //Price
 
         /** it saves the changes that we modify to the SharedPreferences objects  */
-        BookID_Editor.commit();
-        Title_Editor.commit();
-        ISBN_Editor.commit();
-        Author_Editor.commit();
-        Description_Editor.commit();
-        Price_Editor.commit();                                                                      //Price
-    }
-
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-
+        attributesEditor.apply();
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
-        // clearing out the Text after each orientation (TASK 1)
         editText_BookID.setText("");
         editText_Author.setText("");
         editText_Description.setText("");
         editText_Price.setText("");
+    }
+
+    public void reload(View v){
+
+        /**  store and retrieve data  */
+        SharedPreferences attributeID = getSharedPreferences("attributes", 0);
+
+
+        /** retrieving the String value from the SharePreference objects using keys */
+        String msg_BookID = attributeID.getString("BookID_key"," " );
+        String msg_Title = attributeID.getString("Title_key", " ");
+        String msg_ISBN = attributeID.getString("ISBN_key", " ");
+        String msg_Author = attributeID.getString("Author_key", " ");
+        String msg_Description = attributeID.getString("Description_key", " ");
+
+        // Set the text for the editTexts with the retrieved attributes
+        editText_BookID.setText(msg_BookID);
+        editText_Title.setText(msg_Title);
+        editText_ISBN.setText(msg_ISBN);
+        editText_Author.setText(msg_Author);
+        editText_Description.setText(msg_Description);
+        editText_Price.setText(attributeID.getString("Price_key", " "));                      //price
     }
 }
 

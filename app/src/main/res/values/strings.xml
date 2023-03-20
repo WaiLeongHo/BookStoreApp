@@ -8,6 +8,6 @@
     <string name="Price">Price</string>
     <string name="AddBook">ADD BOOK</string>
     <string name="ClearFields">CLEAR FIELDS</string>
-    <string name="Double">Double</string>
+    <string name="setISBN">Set ISBN</string>
     <string name="LoadBook">Load Book</string>
 </resources>

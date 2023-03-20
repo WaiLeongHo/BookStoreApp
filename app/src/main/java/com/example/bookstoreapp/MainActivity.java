@@ -50,16 +50,26 @@ public class MainActivity extends AppCompatActivity {
                 editText_Description.setText("");
                 editText_Title.setText("");
                 editText_Price.setText("");
+
             }
         });
     }
 
-    /**  a button to double the price and show it on editTextPrice   */
-    public void doublePrice(View v) {
-        // editText Price       (converting the Price into double)     (convert object into String representation)
-        double Price = Double.parseDouble(editText_Price.getText().toString()) * 2;
-        new_price = Double.toString(Price);
-        editText_Price.setText(new_price);
+    /**  a button to set value of ISBN into 00112233        (save function)   */
+    public void valueISBN(View v) {
+        /**  stores data  */
+        SharedPreferences attributeID = getSharedPreferences("attributes", 0);
+
+        /**  it modify the data stored in the SharedPreferences  */
+        SharedPreferences.Editor attributesEditor = attributeID.edit();
+
+        /**  Storing the String value into desired SharedPreferences objects  */
+        attributesEditor.putString("ISBN_key", "00112233");
+
+        /** it saves the changes that we modify to the SharedPreferences objects  */
+        attributesEditor.apply();
+
+
     }
 
     /** a method to show a pop-up notification for a brief moment (TOAST Method) */
@@ -82,20 +92,18 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor attributesEditor = attributeID.edit();
 
         /**  Storing the String value into desired SharedPreferences objects  */
-        attributesEditor.putString("BookID_key", Title);
+        attributesEditor.putString("Title_key", Title);
 
-        /** it saves the changes that we modify to the SharedPreferences objects  */
-        attributesEditor.apply();
     }
 
 
     /**  PART 2  */
-    /**  Load function  */
+    /**  Load function  (set the values) */
     @Override
     protected void onStart() {
         super.onStart();
 
-        /**  store and retrieve data after clicking exiting app and reentering again  */
+        /**  retrieve data after clicking exiting app and reentering again  */
         SharedPreferences attributeID = getSharedPreferences("attributes", 0);
 
         /** retrieving the String value from the SharePreference objects using keys */
@@ -114,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
         editText_Price.setText(attributeID.getString("Price_key", " "));                      //price
     }
 
+    /**  Save function  */
     @Override
     protected void onStop() {
         super.onStop();
@@ -125,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
         String saveAuthor = editText_Author.getText().toString();
         String saveDescription = editText_Description.getText().toString();
 
-        /**  store and retrieve data  */
+        /**  stores data  */
         SharedPreferences attributeID = getSharedPreferences("attributes", 0);
 
         /**  it modify the data stored in the SharedPreferences  */
@@ -152,12 +161,11 @@ public class MainActivity extends AppCompatActivity {
         editText_Description.setText("");
         editText_Price.setText("");
     }
-
+    /** Load function */
     public void reload(View v){
 
-        /**  store and retrieve data  */
+        /**  retrieve data  */
         SharedPreferences attributeID = getSharedPreferences("attributes", 0);
-
 
         /** retrieving the String value from the SharePreference objects using keys */
         String msg_BookID = attributeID.getString("BookID_key"," " );
